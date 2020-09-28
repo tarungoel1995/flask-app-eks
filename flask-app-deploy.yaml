@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deploy
+  labels:
+    app: flask
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+   matchLabels:
+     app: flask-app-pod
+     tier: frontend
+  template:
+    metadata:
+      name: flask-app
+      labels:
+        app: flask-app-pod
+        tier: frontend
+    spec:
+      containers:
+        - name: flask-app
+          image: tarungoel1995/redis-ha-hitcounter
+          ports:
+          - containerPort: 5000
+          resources:
+           limits:
+             memory: 1000Mi
+             cpu: 1
+           requests:
+             memory: 800Mi
+             cpu: 800m            
+          env:
+            - name: REDIS_HOST
+              value: "redis-cluster"
+
